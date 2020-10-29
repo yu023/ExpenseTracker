@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+html,body{
+	padding: 30px;
+}
+
+.h30,
+.h30 *{
+	min-height: 30px !important;
+}
+
+.myTable{
+	border: 1px solid #ccc;
+}
+.myTable *{
+	vertical-align: middle;
+}
+.myTable thead th,
+.myTable tbody td{
+	border: 1px solid #ccc;
+	border-left: none;
+	padding : 5px 0;
+}
+.myTable thead tr>th:first-child,
+.myTable tbody tr>td:first-child{
+	border-left: 1px solid #ccc;
+}
+.myTable thead{
+	background-color: #ddd;
+}
+.myTable tbody tr>td:first-child{
+	padding-left: 10px;
+}

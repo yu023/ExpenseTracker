@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="userMappper">
+	<insert id="insertMoney" parameterType="java.util.HashMap">
+		insert into bankbook (bb_category, bb_type, bb_money, bb_amount)
+		values 
+		(
+			#{selectCategory}, #{inputRadio}, #{moneyInput},
+			<if test="null == bb_amount">
+				#{moneyInput}
+			</if>
+			<if test="null != bb_amount">
+				<if test="inputRadio">
+					#{bb_amount} + #{moneyInput}
+				</if>
+				<if test="!inputRadio and moneyInput &lt;= bb_amount">
+					#{bb_amount} - #{moneyInput}
+				</if>
+			</if>
+		)
+	</insert>
+	<select id="selectAmount" resultType="integer">
+		SELECT bb_amount FROM expensetracker.bankbook ORDER BY bb_id DESC LIMIT 1
+	</select>
+	<select id="selectCount" resultType="integer">
+		SELECT count(*) FROM expensetracker.bankbook
+	</select>
+	<select id="selectMoney" parameterType="java.util.HashMap" resultType="expenseTracker.dto.BankBook">
+		select * from bankbook
+		where YEAR(bb_create_date) 
+		<if test="year">
+			BETWEEN (#{searchYear} - 1) AND #{searchYear}
+		</if>
+		<if test="!year">
+			= #{searchYear}
+			AND MONTH(bb_create_date) = #{searchMonth}
+		</if>
+	</select>
+	<select id="selectGBCategory" parameterType="java.util.HashMap" resultType="expenseTracker.dto.BankBook">
+		select bb_category, sum(bb_money) as bb_money from bankbook
+		where bb_type = 0
+		AND YEAR(bb_create_date) 
+		<if test="year">
+			BETWEEN (#{searchYear} - 1) AND #{searchYear}
+		</if>
+		<if test="!year">
+			= #{searchYear}
+			AND MONTH(bb_create_date) = #{searchMonth}
+		</if>
+		group by bb_category
+	</select>
+</mapper>
